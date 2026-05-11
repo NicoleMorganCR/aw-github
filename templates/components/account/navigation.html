@@ -1,0 +1,125 @@
+<nav class="navBar navBar--sub navBar--account">
+    <ul class="navBar-section">
+        <li class="navBar-item {{#if account_page '===' 'orders'}}is-active{{/if}}">
+            <a class="navBar-action" href="{{urls.account.orders.all}}">{{lang 'account.nav.orders'}}</a>
+        </li>
+        {{#if settings.returns_enabled}}
+            <li class="navBar-item {{#if account_page '===' 'returns'}}is-active{{/if}}">
+                <a class="navBar-action" href="{{urls.account.returns}}">{{lang 'account.nav.returns'}}</a>
+            </li>
+        {{/if}}
+        <li class="navBar-item {{#if account_page '===' 'messages'}}is-active{{/if}}">
+            <a class="navBar-action" href="{{urls.account.inbox}}">
+                {{#if customer.num_new_messages}}
+                    {{lang 'account.nav.messages' num_new_messages=customer.num_new_messages}}
+                {{else}}
+                    {{lang 'account.nav.messages' num_new_messages=0}}
+                {{/if}}
+            </a>
+        </li>
+        <li class="navBar-item {{#if account_page '===' 'addresses'}}is-active{{/if}}">
+            <a class="navBar-action" href="{{urls.account.addresses}}">{{lang 'account.nav.addresses'}}</a>
+        </li>
+        {{#if settings.show_payment_methods}}
+            <li class="navBar-item {{#if account_page '===' 'payment_methods'}}is-active{{/if}}">
+                <a class="navBar-action" href="{{urls.account.payment_methods.all}}">{{lang 'account.nav.payment_methods'}}</a>
+            </li>
+        {{/if}}
+        {{#if settings.show_wishlist}}
+            <li class="navBar-item {{#if account_page '===' 'wishlists'}}is-active{{/if}}">
+                <a class="navBar-action" href="{{urls.account.wishlists.all}}">{{lang 'account.nav.wishlists'}}</a>
+            </li>
+        {{/if}}
+        <li class="navBar-item {{#if account_page '===' 'recent_items'}}is-active{{/if}}">
+            <a class="navBar-action" href="{{urls.account.recent_items}}">{{lang 'account.nav.recently_viewed'}}</a>
+        </li>
+        <li id="wj-balance-nav-item"
+            class="navBar-item {{#if account_page '===' 'wj_balance'}}is-active{{/if}}"
+            style="display:none;"
+            data-current-page="{{account_page}}"
+            data-balance-endpoint="{{theme_settings.laravel_opening_balance_endpoint}}"
+            data-api-key="{{theme_settings.laravel_api_key}}"
+            data-customer-id="{{customer.id}}">
+            <a class="navBar-action" href="{{theme_settings.wj_balance_page_url}}">{{lang 'account.nav.wj_balance' default='Transferred GC Balance'}}</a>
+        </li>
+        <li class="navBar-item {{#if account_page '===' 'settings'}}is-active{{/if}}">
+            <a class="navBar-action" href="{{urls.account.details}}">{{lang 'account.nav.settings'}}</a>
+        </li>
+        <li class="navBar-item">
+            <a class="navBar-action" href="{{urls.auth.logout}}" aria-label="{{lang 'common.logout'}}">{{lang 'common.logout'}}</a>
+        </li>
+    </ul>
+</nav>
+
+{{#if customer}}
+<style>
+    #wj-page-loader {
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.92);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .wj-page-spinner {
+        width: 42px;
+        height: 42px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #1a1a2e;
+        border-radius: 50%;
+        animation: wj-page-spin 0.7s linear infinite;
+    }
+    @keyframes wj-page-spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<div id="wj-page-loader" style="display:none;" aria-hidden="true">
+    <div class="wj-page-spinner"></div>
+</div>
+
+<script>
+(function () {
+    var navItem  = document.getElementById('wj-balance-nav-item');
+    var loader   = document.getElementById('wj-page-loader');
+    if (!navItem) { return; }
+
+    function showLoader() { if (loader) { loader.style.display = 'flex'; } }
+    function hideLoader() { if (loader) { loader.style.display = 'none'; } }
+
+    // Already on the WJ Balance page — show nav item immediately, no loader needed
+    if (navItem.getAttribute('data-current-page') === 'wj_balance') {
+        navItem.style.display = '';
+        return;
+    }
+
+    // On other account pages — show page loader while fetching
+    showLoader();
+
+    var customerId = navItem.getAttribute('data-customer-id');
+    var balanceUrl = navItem.getAttribute('data-balance-endpoint');
+    var apiKey     = navItem.getAttribute('data-api-key');
+
+    if (!customerId || !balanceUrl) {
+        hideLoader();
+        return;
+    }
+
+    fetch(balanceUrl + '?customer_id=' + encodeURIComponent(customerId), {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', 'X-API-Key': apiKey }
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+        hideLoader();
+        if (data.success && parseFloat((data.data && data.data.opening_balance) || '0') > 0) {
+            navItem.style.display = '';
+        }
+    })
+    .catch(function () {
+        hideLoader();
+    });
+}());
+</script>
+{{/if}}

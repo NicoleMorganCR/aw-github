@@ -1,0 +1,329 @@
+---
+name: "Transferred GC Balance"
+---
+
+{{#partial "page"}}
+
+<div class="page">
+    <aside class="page-sidebar">
+        {{> components/epic/sidebar}}
+    </aside>
+
+    <main class="page-content">
+
+        {{{region name="page_above_content"}}}
+
+        {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+
+        {{> components/account/navigation account_page='wj_balance'}}
+
+        {{{region name="page_builder_content"}}}
+
+        {{#if page.content}}
+            <div class="wj-balance-admin-content">
+                {{{page.content}}}
+            </div>
+        {{/if}}
+        
+        {{#if customer}}
+            <div class="wj-balance-container"
+                 data-customer-id="{{customer.id}}"
+                 data-balance-endpoint="{{theme_settings.laravel_opening_balance_endpoint}}"
+                 data-redeem-endpoint="{{theme_settings.laravel_redeem_endpoint}}"
+                 data-api-key="{{theme_settings.laravel_api_key}}">
+
+                <div class="wj-balance-wrapper">
+
+                    {{!-- Loading skeleton --}}
+                    <div id="wj-balance-loading" class="wj-balance-card">
+                        <div class="wj-balance-skeleton">
+                            <div class="wj-balance-skeleton__bar wj-balance-skeleton__bar--label"></div>
+                            <div class="wj-balance-skeleton__bar wj-balance-skeleton__bar--amount"></div>
+                            <div class="wj-balance-skeleton__bar wj-balance-skeleton__bar--desc"></div>
+                            <div class="wj-balance-skeleton__bar wj-balance-skeleton__bar--desc2"></div>
+                            <div class="wj-balance-skeleton__bar wj-balance-skeleton__bar--btn"></div>
+                        </div>
+                    </div>
+
+                    {{!-- Balance card — shown only when balance > 0 --}}
+                    <div id="wj-balance-value" class="wj-balance-card" style="display:none;">
+                        <div class="wj-balance-card__header">
+                            <div class="wj-balance-card__icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <rect x="2" y="6" width="20" height="14" rx="2"/>
+                                    <path d="M2 10h20"/>
+                                    <circle cx="17" cy="15" r="1.25" fill="#fff" stroke="none"/>
+                                    <path d="M6 6V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </div>
+                            <p class="wj-balance-card__label">
+                                {{lang 'account.wj_balance.balance_label' default='Available Balance'}}
+                            </p>
+                            <p class="wj-balance-card__amount" id="wj-balance-amount">$0.00</p>
+                        </div>
+
+                        <div class="wj-balance-card__body">
+                            <p class="wj-balance-card__description">
+                                {{lang 'account.wj_balance.description' default='Redeem your available balance to receive a Gift Certificate you can use at checkout.'}}
+                            </p>
+
+                            <button id="wj-redeem-btn"
+                                    class="wj-balance-redeem-btn"
+                                    type="button"
+                                    data-label-default="{{lang 'account.wj_balance.redeem' default='Redeem the Balance'}}"
+                                    data-label-processing="{{lang 'account.wj_balance.redeem_processing' default='Processing\u2026'}}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                                {{lang 'account.wj_balance.redeem' default='Redeem the Balance'}}
+                            </button>
+
+                            <div id="wj-redeem-response" style="display:none;">
+                                <div id="wj-redeem-message-box" class="wj-balance-alert">
+                                    <svg id="wj-redeem-icon" viewBox="0 0 24 24" aria-hidden="true"></svg>
+                                    <span id="wj-redeem-message"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{!-- GC success card — shown after successful redemption --}}
+                    <div id="wj-gc-success" class="wj-balance-card" style="display:none;">
+                        <div class="wj-balance-card__header wj-balance-card__header--success">
+                            <div class="wj-balance-card__icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <p class="wj-balance-card__label">
+                                {{lang 'account.wj_balance.gc_heading' default='Your Gift Certificate'}}
+                            </p>
+                            <p class="wj-balance-card__amount" id="wj-gc-amount">$0.00</p>
+                        </div>
+
+                        <div class="wj-balance-card__body">
+                            <p class="wj-balance-card__description">
+                                {{lang 'account.wj_balance.gc_instructions' default='Enter this code at checkout in the Gift Certificate field to apply your balance.'}}
+                            </p>
+
+                            <div class="wj-gc-code-box">
+                                <span id="wj-gc-code" class="wj-gc-code-text"></span>
+                                <button id="wj-gc-copy-btn"
+                                        class="wj-gc-copy-btn"
+                                        type="button"
+                                        data-label-copy="{{lang 'account.wj_balance.gc_copy' default='Copy Code'}}"
+                                        data-label-copied="{{lang 'account.wj_balance.gc_copied' default='Copied!'}}">
+                                    {{lang 'account.wj_balance.gc_copy' default='Copy Code'}}
+                                </button>
+                            </div>
+
+                            <p class="wj-gc-notes-hint">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12"/>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                </svg>
+                                <span>You can also find these details in <strong>User Notes</strong> under <a href="/account.php?action=account_details">Account Settings</a>.</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    {{!-- Fetch error --}}
+                    <div id="wj-balance-error"
+                         class="wj-balance-alert wj-balance-alert--error"
+                         style="display:none;">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span>{{lang 'account.wj_balance.balance_error' default='Unable to load balance. Please try again later.'}}</span>
+                    </div>
+
+                </div>{{!-- /.wj-balance-wrapper --}}
+
+            </div>{{!-- /.wj-balance-container --}}
+
+        {{else}}
+            <div class="alertBox alertBox--info" style="margin-top:1.5rem;">
+                <p>
+                    {{lang 'account.wj_balance.login_required' default='Please'}}
+                    <a href="{{urls.auth.login}}">{{lang 'common.login'}}</a>
+                    {{lang 'account.wj_balance.login_required_suffix' default='to view your account balance.'}}
+                </p>
+            </div>
+        {{/if}}
+
+        {{{region name="page_below_content"}}}
+
+    </main>
+
+    <div class="sidebar-region">
+        {{{region name="epic_sidebar"}}}
+        {{{region name="epic_sidebar--global"}}}
+    </div>
+</div>
+
+{{#if customer}}
+<script>
+(function () {
+    'use strict';
+
+    var container = document.querySelector('.wj-balance-container');
+    if (!container) { return; }
+
+    var customerId = container.getAttribute('data-customer-id');
+    var balanceUrl = container.getAttribute('data-balance-endpoint');
+    var redeemUrl  = container.getAttribute('data-redeem-endpoint');
+    var apiKey     = container.getAttribute('data-api-key');
+
+    var loadingEl   = document.getElementById('wj-balance-loading');
+    var valueEl     = document.getElementById('wj-balance-value');
+    var amountEl    = document.getElementById('wj-balance-amount');
+    var errorEl     = document.getElementById('wj-balance-error');
+    var redeemBtn   = document.getElementById('wj-redeem-btn');
+    var responseEl  = document.getElementById('wj-redeem-response');
+    var messageBox  = document.getElementById('wj-redeem-message-box');
+    var messageEl   = document.getElementById('wj-redeem-message');
+    var redeemIcon  = document.getElementById('wj-redeem-icon');
+    var gcSuccessEl = document.getElementById('wj-gc-success');
+    var gcCodeEl    = document.getElementById('wj-gc-code');
+    var gcAmountEl  = document.getElementById('wj-gc-amount');
+    var gcCopyBtn   = document.getElementById('wj-gc-copy-btn');
+
+    function show(el) { el.style.display = ''; }
+    function hide(el) { el.style.display = 'none'; }
+
+    function formatCurrency(value) {
+        var num = parseFloat(value);
+        return isNaN(num) ? value : '$' + num.toFixed(2);
+    }
+
+    var SVG_ERROR = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+    var BTN_ICON  = '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:17px;height:17px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+
+    // ── Fetch Opening Balance ────────────────────────────────────────────────
+    fetch(balanceUrl + '?customer_id=' + encodeURIComponent(customerId), {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', 'X-API-Key': apiKey }
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+        hide(loadingEl);
+
+        if (data.success) {
+            var balance = parseFloat(data.data.opening_balance || '0');
+
+            if (balance > 0) {
+                amountEl.textContent = formatCurrency(balance);
+                show(valueEl);
+            }
+            // balance === 0 → nothing shown (card stays hidden, no message)
+        } else {
+            show(errorEl);
+        }
+    })
+    .catch(function () {
+        hide(loadingEl);
+        show(errorEl);
+    });
+
+    // ── Copy GC Code ─────────────────────────────────────────────────────────
+    if (gcCopyBtn) {
+        gcCopyBtn.addEventListener('click', function () {
+            var code       = gcCodeEl ? gcCodeEl.textContent.trim() : '';
+            var labelCopy  = gcCopyBtn.getAttribute('data-label-copy')   || 'Copy Code';
+            var labelCopied = gcCopyBtn.getAttribute('data-label-copied') || 'Copied!';
+
+            if (!code) { return; }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(function () {
+                    gcCopyBtn.textContent = labelCopied;
+                    gcCopyBtn.classList.add('wj-gc-copy-btn--copied');
+                    setTimeout(function () {
+                        gcCopyBtn.textContent = labelCopy;
+                        gcCopyBtn.classList.remove('wj-gc-copy-btn--copied');
+                    }, 2000);
+                });
+            } else {
+                // Fallback for older browsers
+                var ta = document.createElement('textarea');
+                ta.value = code;
+                ta.style.position = 'fixed';
+                ta.style.opacity  = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    gcCopyBtn.textContent = labelCopied;
+                    gcCopyBtn.classList.add('wj-gc-copy-btn--copied');
+                    setTimeout(function () {
+                        gcCopyBtn.textContent = labelCopy;
+                        gcCopyBtn.classList.remove('wj-gc-copy-btn--copied');
+                    }, 2000);
+                } catch (e) {}
+                document.body.removeChild(ta);
+            }
+        });
+    }
+
+    // ── Redeem Handler ───────────────────────────────────────────────────────
+    if (redeemBtn) {
+        redeemBtn.addEventListener('click', function () {
+            var defaultLabel    = redeemBtn.getAttribute('data-label-default');
+            var processingLabel = redeemBtn.getAttribute('data-label-processing');
+
+            redeemBtn.disabled  = true;
+            redeemBtn.innerHTML = '<span class="wj-spinner"></span> ' + processingLabel;
+            hide(responseEl);
+
+            fetch(redeemUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept':       'application/json',
+                    'X-API-Key':    apiKey
+                },
+                body: JSON.stringify({ customer_id: parseInt(customerId, 10) })
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    var gc       = (data.data && data.data.gift_card) ? data.data.gift_card : {};
+                    var gcCode   = gc.code   || '';
+                    var gcAmount = parseFloat(gc.amount || data.data.redeemed_amount || 0);
+
+                    // Populate the GC success card
+                    if (gcCodeEl)   { gcCodeEl.textContent   = gcCode; }
+                    if (gcAmountEl) { gcAmountEl.textContent = formatCurrency(gcAmount); }
+
+                    // Swap balance card for success card
+                    hide(valueEl);
+                    show(gcSuccessEl);
+                } else {
+                    messageEl.textContent = data.message || 'Redemption failed. Please try again.';
+                    messageBox.className  = 'wj-balance-alert wj-balance-alert--error';
+                    redeemIcon.innerHTML  = SVG_ERROR;
+                    redeemBtn.disabled    = false;
+                    redeemBtn.innerHTML   = BTN_ICON + ' ' + defaultLabel;
+                    show(responseEl);
+                }
+            })
+            .catch(function () {
+                messageEl.textContent = 'An error occurred. Please try again.';
+                messageBox.className  = 'wj-balance-alert wj-balance-alert--error';
+                redeemIcon.innerHTML  = SVG_ERROR;
+                show(responseEl);
+                redeemBtn.disabled    = false;
+                redeemBtn.innerHTML   = BTN_ICON + ' ' + defaultLabel;
+            });
+        });
+    }
+
+}());
+</script>
+{{/if}}
+
+{{/partial}}
+{{> layout/base}}

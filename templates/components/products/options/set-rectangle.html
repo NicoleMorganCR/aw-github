@@ -1,0 +1,66 @@
+<div class="form-field" data-product-attribute="set-rectangle" role="radiogroup" aria-labelledby="rectangle-group-label">
+<label class="form-label form-label--alternate form-label--inlineSmall" id="rectangle-group-label">
+    {{this.display_name}}:
+    <span data-option-value></span>
+
+    {{#contains this.display_name "dst file"}}
+
+        <span class="dst-info-icon" tabindex="0" role="button" aria-expanded="false">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+                <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 15C9.45 15 9 14.55 9 14V10C9 9.45 9.45 9 10 9C10.55 9 11 9.45 11 10V14C11 14.55 10.55 15 10 15ZM11 7H9V5H11V7Z" fill="#5E637A"/>
+            </svg>
+            <span class="dst-tooltip">
+                A DST file must be used to embroider your logo. A DST file is a machine-ready embroidery format containing precise stitch-by-stitch instructions that ensure your logo is accurately and consistently reproduced by the embroidery machine. If you do not already have a DST, each logo will incur a $50.00 one-time file charge.
+            </span>
+        </span>
+    {{/contains}}
+
+    {{#contains this.display_name "Cobrand"}}
+    {{else}}
+        {{#contains this.display_name "dst file"}}
+        {{else}}
+            {{> components/common/requireness-msg}}
+        {{/contains}}
+    {{/contains}}
+</label>
+    {{#contains this.display_name "Cobrand"}}
+    {{else}}
+        {{#contains this.display_name "dst file"}}
+        {{else}}
+            {{#unless required}}
+                <input
+                    class="form-radio"
+                    type="radio"
+                    id="attribute_rectangle__{{id}}_none"
+                    name="attribute[{{id}}]"
+                    value=""
+                    checked="{{#if defaultValue '==' ''}}checked{{/if}}"
+                >
+                <label class="form-option" for="attribute_rectangle__{{id}}_none">
+                    <span class="form-option-variant">{{lang 'products.none'}}</span>
+                </label>
+            {{/unless}}
+        {{/contains}}
+    {{/contains}}
+
+
+    {{#each this.values}}
+    <div class="form-option-wrapper">    
+        <input
+            class="form-radio"
+            type="radio"
+            id="attribute_rectangle__{{../id}}_{{id}}"
+            name="attribute[{{../id}}]"
+            value="{{id}}"
+            {{#if selected}}
+                checked
+                data-default
+            {{/if}}
+            {{#if ../required}}required{{/if}}
+        >
+        <label class="form-option" for="attribute_rectangle__{{../id}}_{{id}}" data-product-attribute-value="{{id}}">
+            <span class="form-option-variant">{{this.label}}</span>
+        </label>
+    </div>
+    {{/each}}
+</div>
