@@ -342,9 +342,10 @@ Transferred GC Balance End
 // Homepage CTA Banner
 // ================================
 
-// Match body bottom margin to top margin so grey space is equal on all pages
+// Equal grey spacing above and below content on all pages
 .body {
-    margin-bottom: 2.5rem;
+    margin-top: 2.5rem !important;
+    margin-bottom: 2.5rem !important;
 }
 
 .aw-cta-banner {
