@@ -342,6 +342,11 @@ Transferred GC Balance End
 // Homepage CTA Banner
 // ================================
 
+// Match body bottom margin to top margin so grey space is equal on all pages
+.body {
+    margin-bottom: 2.5rem;
+}
+
 .aw-cta-banner {
     background-image: url('https://cdn11.bigcommerce.com/s-kycczgbh5g/images/stencil/original/image-manager/banner2.jpg?t=1779906206');
     background-size: cover;
@@ -404,6 +409,21 @@ Transferred GC Balance End
 // ================================
 // Product Card Hover Buttons
 // ================================
+
+// Hide hover buttons on mobile — they're a desktop hover feature
+.card-figcaption {
+    @media (max-width: 800px) {
+        display: none !important;
+    }
+}
+
+// 1 column product grid on mobile
+@media (max-width: 550px) {
+    .productGrid .product {
+        width: 100% !important;
+        display: block !important;
+    }
+}
 
 .card-figcaption-body {
     width: 190px;
@@ -491,6 +511,10 @@ Transferred GC Balance End
 #main-content > div.container > div > main {
     background-color: #fff;
     padding: 4em;
+
+    @media (max-width: 550px) {
+        padding: 1em;
+    }
 }
 
 .productView-rating,
