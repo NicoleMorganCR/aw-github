@@ -338,6 +338,61 @@ Transferred GC Balance End
 }
 
 // ================================
+// Homepage CTA Banner
+// ================================
+
+.aw-cta-banner {
+    background-image: url('/assets/img/banner2.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    width: 100%;
+}
+
+.aw-cta-banner__inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.aw-cta-banner__text {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.5;
+
+    @media (min-width: 801px) {
+        font-size: 1.4rem;
+    }
+}
+
+.aw-cta-banner__button {
+    display: inline-block;
+    background-color: #ffffff;
+    border: 2px solid #EA6820;
+    border-radius: 50px;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.6rem 2rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover,
+    &:focus {
+        background-color: #EA6820;
+        color: #ffffff;
+        border-color: #EA6820;
+    }
+}
+
+// ================================
 // Product Card Hover Buttons
 // ================================
 
