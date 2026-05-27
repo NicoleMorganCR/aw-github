@@ -358,6 +358,12 @@ Transferred GC Balance End
     .navPages-list-depth-max > .navPages-item .navPages-action-moreIcon {
         margin-left: 2px;
     }
+
+    // Tighten vertical spacing in dropdown submenus
+    .navPage-subMenu-action {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 }
 
 // Blackout nav link — black background, white text, orange hover
