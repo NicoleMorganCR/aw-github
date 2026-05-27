@@ -342,8 +342,8 @@ Transferred GC Balance End
 // Homepage CTA Banner
 // ================================
 
-// Match body bottom margin to banner top margin so grey space is equal
-.page-type_default .body {
+// Match body bottom margin to top margin so grey space is equal on all pages
+.body {
     margin-bottom: 2.5rem;
 }
 
