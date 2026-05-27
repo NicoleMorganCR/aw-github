@@ -353,6 +353,11 @@ Transferred GC Balance End
         padding-left: 0.4rem;
         padding-right: 0.4rem;
     }
+
+    // Tighten dropdown arrow closer to link text
+    .navPages-list-depth-max > .navPages-item .navPages-action-moreIcon {
+        margin-left: 2px;
+    }
 }
 
 // Blackout nav link — black background, white text, orange hover
