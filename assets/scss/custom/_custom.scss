@@ -342,6 +342,11 @@ Transferred GC Balance End
 // Homepage CTA Banner
 // ================================
 
+// Match body bottom margin to banner top margin so grey space is equal
+.page-type_default .body {
+    margin-bottom: 2.5rem;
+}
+
 .aw-cta-banner {
     background-image: url('https://cdn11.bigcommerce.com/s-kycczgbh5g/images/stencil/original/image-manager/banner2.jpg?t=1779906206');
     background-size: cover;
