@@ -1,5 +1,6 @@
 body {
     font-size: 1.17em;
+    overflow-x: hidden;
 }
 
 /* ================================
@@ -342,7 +343,7 @@ Transferred GC Balance End
 // ================================
 
 .aw-cta-banner {
-    background-image: url('/assets/img/banner2.jpg');
+    background-image: url('https://cdn11.bigcommerce.com/s-kycczgbh5g/images/stencil/original/image-manager/banner2.jpg?t=1779906206');
     background-size: cover;
     background-position: center;
     padding: 3rem 1.5rem;
@@ -354,6 +355,8 @@ Transferred GC Balance End
     margin-left: -50vw;
     margin-top: 2.5rem;
     margin-bottom: 2.5rem;
+    // Prevent horizontal scrollbar
+    overflow-x: hidden;
 }
 
 .aw-cta-banner__inner {
