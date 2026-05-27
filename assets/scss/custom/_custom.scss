@@ -405,6 +405,13 @@ Transferred GC Balance End
 // Product Card Hover Buttons
 // ================================
 
+// Hide hover buttons on mobile — they're a desktop hover feature
+.card-figcaption {
+    @media (max-width: 800px) {
+        display: none !important;
+    }
+}
+
 .card-figcaption-body {
     width: 190px;
 }
