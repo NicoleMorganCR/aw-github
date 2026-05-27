@@ -412,6 +412,14 @@ Transferred GC Balance End
     }
 }
 
+// 1 column product grid on mobile
+@media (max-width: 550px) {
+    .productGrid .product {
+        width: 100% !important;
+        display: block !important;
+    }
+}
+
 .card-figcaption-body {
     width: 190px;
 }
