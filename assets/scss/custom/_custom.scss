@@ -359,10 +359,11 @@ Transferred GC Balance End
         margin-left: 2px;
     }
 
-    // Tighten vertical spacing in dropdown submenus
+    // Tighten vertical spacing in dropdown submenus and match main nav font size
     .navPage-subMenu-action {
         padding-top: 5px;
         padding-bottom: 5px;
+        font-size: 12px;
     }
 }
 
