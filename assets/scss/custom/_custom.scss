@@ -456,8 +456,15 @@ Transferred GC Balance End
 // Navigation Customizations
 // ================================
 
-// Hide QuickShip from nav
-.navPages-item-quickship {
+// Hide QuickShip from nav (covers "QuickShip" and "Quick Ship" naming)
+.navPages-item-quickship,
+.navPages-item-quick-ship {
+    display: none;
+}
+
+// Hide QuickShip from footer category list
+.footer-info-list li:has(a[href*="quickship"]),
+.footer-info-list li:has(a[href*="quick-ship"]) {
     display: none;
 }
 
