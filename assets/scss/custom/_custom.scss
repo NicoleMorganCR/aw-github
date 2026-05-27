@@ -337,6 +337,39 @@ Transferred GC Balance End
     }
 }
 
+// ================================
+// Navigation Customizations
+// ================================
+
+// Hide QuickShip from nav
+.navPages-item-quickship {
+    display: none;
+}
+
+// Shrink main nav link font size so all links fit on one line
+@media (min-width: 801px) {
+    .navPages-list-depth-max > .navPages-item > .navPages-action {
+        font-size: 12px;
+    }
+}
+
+// Blackout nav link — black background, white text, orange hover
+@media (min-width: 801px) {
+    .navPages-item-blackout {
+        background-color: #010101;
+
+        > .navPages-action {
+            color: #ffffff;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+
+            &:hover {
+                color: #EA6820;
+            }
+        }
+    }
+}
+
 #sd-image-e970121f-e33a-465c-a7b9-01bbd499d3ea {
     border-radius: 7px;
     border-radius: 15px;
