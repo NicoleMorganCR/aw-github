@@ -485,9 +485,12 @@
     "aw-filter-rule-5-group-name": "Insider",
     "aw-filter-rule-5-sku-prefixes": "AW-,AWDC-",
     "aw-filter-rule-5-sku-whitelist": "",
-    "aw-filter-rule-6-group-name": "",
-    "aw-filter-rule-6-sku-prefixes": "",
-    "aw-filter-rule-6-sku-whitelist": ""
+    "aw-filter-rule-6-group-name": "Other",
+    "aw-filter-rule-6-sku-prefixes": "AW-",
+    "aw-filter-rule-6-sku-whitelist": "",
+    "aw-filter-rule-7-group-name": "",
+    "aw-filter-rule-7-sku-prefixes": "",
+    "aw-filter-rule-7-sku-whitelist": ""
   },
   "read_only_files": [
     "/assets/scss/components/citadel",
@@ -969,9 +972,12 @@
         "aw-filter-rule-5-group-name": "Insider",
         "aw-filter-rule-5-sku-prefixes": "AW-,AWDC-",
         "aw-filter-rule-5-sku-whitelist": "",
-        "aw-filter-rule-6-group-name": "",
-        "aw-filter-rule-6-sku-prefixes": "",
-        "aw-filter-rule-6-sku-whitelist": ""
+        "aw-filter-rule-6-group-name": "Other",
+        "aw-filter-rule-6-sku-prefixes": "AW-",
+        "aw-filter-rule-6-sku-whitelist": "",
+        "aw-filter-rule-7-group-name": "",
+        "aw-filter-rule-7-sku-prefixes": "",
+        "aw-filter-rule-7-sku-whitelist": ""
       }
     }
   ]

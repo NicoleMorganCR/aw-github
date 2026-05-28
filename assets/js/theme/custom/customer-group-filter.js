@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-const MAX_RULES = 6;
+const MAX_RULES = 7;
 
 function parseRules(themeSettings) {
     const rules = [];
