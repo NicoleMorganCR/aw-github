@@ -36,7 +36,6 @@ const RULES = [
 ];
 
 function parseRules() {
-    debugger;
     return RULES;
 }
 /*function parseRules(themeSettings) {
