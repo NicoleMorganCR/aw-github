@@ -1,46 +1,29 @@
 (function () {
 
-  function getOrCreateWarning() {
-    var existing = document.getElementById('sku-unavailable-msg');
-    if (existing) return existing;
-    var msg = document.createElement('p');
-    msg.id = 'sku-unavailable-msg';
-    msg.textContent = 'Variant Unavailable';
-    msg.style.cssText = 'color: #cc0000; font-weight: bold; margin-bottom: 8px; display: none;';
-    var btn = document.getElementById('form-action-addToCart');
-    if (btn) btn.parentNode.insertBefore(msg, btn);
-    return msg;
+  function isInvalidSku(sku) {
+    if (!sku) return true;
+    var parts = sku.split('-');
+    return parts.length >= 3 && !/^\d+$/.test(parts[2]);
   }
 
-  function getSelectedAttributeIds() {
-    var ids = [];
-    document.querySelectorAll('form[data-cart-item-add] input[name^="attribute["]:checked').forEach(function (el) {
-      var val = parseInt(el.value, 10);
-      if (!isNaN(val) && val > 0) ids.push(val);
-    });
-    return ids;
-  }
-
-  function updateUI(inStockAttributes) {
+  function updateUI(isInvalid) {
     try {
       var form = document.querySelector('form[data-cart-item-add]');
       if (!form || !form.checkValidity()) return;
 
-      var selectedIds = getSelectedAttributeIds();
-      if (selectedIds.length === 0) return;
-
-      var invalid = selectedIds.some(function (id) {
-        return inStockAttributes.indexOf(id) === -1;
-      });
-
-      var msg = getOrCreateWarning();
-      var btn = document.getElementById('form-action-addToCart');
-      if (msg) msg.style.display = invalid ? 'block' : 'none';
-      if (btn) btn.disabled = invalid;
+      if (isInvalid) {
+        var btn = document.getElementById('form-action-addToCart');
+        var msgBox = document.querySelector('.productAttributes-message');
+        var msgText = msgBox && msgBox.querySelector('.alertBox-message');
+        if (msgText) msgText.textContent = 'The selected product combination is currently unavailable.';
+        if (msgBox) msgBox.style.display = '';
+        if (btn) btn.disabled = true;
+      }
+      // When valid, let BC handle the message and button state normally
     } catch (e) {}
   }
 
-  // Only intercept BC's product attributes endpoint — no interference with other scripts
+  // Only intercept BC's product attributes endpoint
   var originalJson = Response.prototype.json;
   Response.prototype.json = function () {
     var url = this.url || '';
@@ -52,8 +35,11 @@
 
     return originalResult.then(function (data) {
       try {
-        if (data && data.data && Array.isArray(data.data.in_stock_attributes)) {
-          setTimeout(function () { updateUI(data.data.in_stock_attributes); }, 0);
+        if (data && data.data) {
+          var variantId = data.data.variantId;
+          var sku = data.data.sku || '';
+          var invalid = !variantId || isInvalidSku(sku);
+          setTimeout(function () { updateUI(invalid); }, 0);
         }
       } catch (e) {}
       return data;
@@ -65,8 +51,8 @@
     var form = document.querySelector('form[data-cart-item-add]');
     if (!form) return;
     form.addEventListener('submit', function (e) {
-      var msg = document.getElementById('sku-unavailable-msg');
-      if (msg && msg.style.display !== 'none') {
+      var msgBox = document.querySelector('.productAttributes-message');
+      if (msgBox && msgBox.style.display !== 'none') {
         e.preventDefault();
         e.stopImmediatePropagation();
       }
