@@ -1,11 +1,5 @@
 (function () {
 
-  function isInvalidSku(sku) {
-    if (!sku) return false;
-    var parts = sku.split('-');
-    return parts.length >= 3 && !/^\d+$/.test(parts[2]);
-  }
-
   function getOrCreateWarning() {
     var existing = document.getElementById('sku-unavailable-msg');
     if (existing) return existing;
@@ -18,25 +12,50 @@
     return msg;
   }
 
-  function updateUI(isInvalid) {
-    var form = document.querySelector('form[data-cart-item-add]');
-    if (!form || !form.checkValidity()) return;
-    var msg = getOrCreateWarning();
-    var btn = document.getElementById('form-action-addToCart');
-    if (msg) msg.style.display = isInvalid ? 'block' : 'none';
-    if (btn) btn.disabled = isInvalid;
+  function getSelectedAttributeIds() {
+    var ids = [];
+    document.querySelectorAll('form[data-cart-item-add] input[name^="attribute["]:checked').forEach(function (el) {
+      var val = parseInt(el.value, 10);
+      if (!isNaN(val) && val > 0) ids.push(val);
+    });
+    return ids;
   }
 
-  // Patch Response.prototype.json to intercept BC's product attributes API response
+  function updateUI(inStockAttributes) {
+    try {
+      var form = document.querySelector('form[data-cart-item-add]');
+      if (!form || !form.checkValidity()) return;
+
+      var selectedIds = getSelectedAttributeIds();
+      if (selectedIds.length === 0) return;
+
+      var invalid = selectedIds.some(function (id) {
+        return inStockAttributes.indexOf(id) === -1;
+      });
+
+      var msg = getOrCreateWarning();
+      var btn = document.getElementById('form-action-addToCart');
+      if (msg) msg.style.display = invalid ? 'block' : 'none';
+      if (btn) btn.disabled = invalid;
+    } catch (e) {}
+  }
+
+  // Only intercept BC's product attributes endpoint — no interference with other scripts
   var originalJson = Response.prototype.json;
   Response.prototype.json = function () {
-    return originalJson.call(this).then(function (data) {
-      if (data && data.data && 'variantId' in data.data) {
-        var variantId = data.data.variantId;
-        var sku = data.data.sku || '';
-        var invalid = !variantId || isInvalidSku(sku);
-        setTimeout(function () { updateUI(invalid); }, 0);
-      }
+    var url = this.url || '';
+    var originalResult = originalJson.call(this);
+
+    if (url.indexOf('/remote/v1/product-attributes/') === -1) {
+      return originalResult;
+    }
+
+    return originalResult.then(function (data) {
+      try {
+        if (data && data.data && Array.isArray(data.data.in_stock_attributes)) {
+          setTimeout(function () { updateUI(data.data.in_stock_attributes); }, 0);
+        }
+      } catch (e) {}
       return data;
     });
   };
