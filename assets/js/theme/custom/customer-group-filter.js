@@ -5,7 +5,7 @@ import $ from 'jquery';
 const RULES = [
     {
         groupName: 'Dealers',
-        prefixes: ['AW-0','AW-25','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWDC-1','AWDC-2','AWDC-3','AWDC-7','AWH-KIT','AW-KIT-'],
+        prefixes: ['AW-0','AW-25','AW-30','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWDC-1','AWDC-2','AWDC-3','AWDC-7','AWH-KIT','AW-KIT-'],
         whitelist: [],
     },
     {
@@ -15,7 +15,7 @@ const RULES = [
     },
     {
         groupName: 'Select Builder',
-        prefixes: ['AW-0','AW-25','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWH-KIT','AW-KIT-','AWSB-3','AWSB-4','AWSB-5','AWSB-6','AWSB-8','AWSBC-1','AWSBC-2','AWSBC-3','AWSBC-7'],
+        prefixes: ['AW-0','AW-25','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWH-KIT','AW-KIT-','AWSB-3','AWSB-4','AWSB-5','AWSB-6','AWSB-7','AWSB-8','AWSBC-1','AWSBC-2','AWSBC-3','AWSBC-7'],
         whitelist: [],
     },
     {
