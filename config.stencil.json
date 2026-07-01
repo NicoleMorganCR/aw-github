@@ -1,0 +1,11 @@
+{
+  "normalStoreUrl": "https://creative-resources-agency-store-3.mybigcommerce.com",
+  "port": 3000,
+  "packageManager": "npm",
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  }
+}
