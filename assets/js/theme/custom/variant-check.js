@@ -1,9 +1,15 @@
 (function () {
 
   function isInvalidSku(sku) {
-    if (!sku) return true;
+    if (!sku) return false;
     var parts = sku.split('-');
-    return parts.length >= 3 && !/^\d+$/.test(parts[2]);
+    // Real variant SKUs always contain a 4-digit inventory code (e.g. 0471, 0048)
+    // Auto-generated SKUs never do — they use abbreviations like 2X, HE, SM, NA
+    if (parts.length <= 2) return false; // Simple SKUs (AW-0005) are always valid
+    for (var i = 2; i < parts.length; i++) {
+      if (/^\d{4}$/.test(parts[i])) return false; // Found a real inventory code
+    }
+    return true; // No 4-digit code found — likely auto-generated
   }
 
   function updateUI(isInvalid) {
