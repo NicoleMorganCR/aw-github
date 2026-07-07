@@ -5,6 +5,11 @@
             <a class="navPage-subMenu-action navPages-action navPages-action-depth-max" href="{{url}}">{{lang 'category.view_all.name' category=name}}</a>
         </li>
         {{/if}}
+        {{#if name '===' 'Gifts'}}
+        <li class="navPage-subMenu-item-child">
+            <a class="navPage-subMenu-action navPages-action" href="https://www.andersengear.com/giftcertificates.php">Gift Certificates</a>
+        </li>
+        {{/if}}
         {{#each children}}
             <li class="navPage-subMenu-item-child">
                 {{#if children}}
@@ -17,5 +22,10 @@
                 {{/if}}
             </li>
         {{/each}}
+        {{#if name '===' 'Gifts'}}
+        <li class="navPage-subMenu-item-child">
+            <a class="navPage-subMenu-action navPages-action" href="/marketing-events/10-under/">$10 & Under</a>
+        </li>
+        {{/if}}
     </ul>
 </div>

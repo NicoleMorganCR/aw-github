@@ -1,8 +1,44 @@
 import $ from 'jquery';
 
-const MAX_RULES = 6;
+//const MAX_RULES = 7;
 
-function parseRules(themeSettings) {
+const RULES = [
+    {
+        groupName: 'Dealers',
+        prefixes: ['AW-0','AW-25','AW-30','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWDC-1','AWDC-2','AWDC-3','AWDC-7','AWH-KIT','AW-KIT-'],
+        whitelist: [],
+    },
+    {
+        groupName: 'Certified Contractor',
+        prefixes: ['AW-0','AW-25','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWCC-1000','AWCC-1006','AWCC-1008','AWCC-2003','AWCC-2019','AWCC-2021','AWCC-2024','AWCC-3','AWCC-4','AWCC-5','AWCC-6','AWCC-7','AWCC-8','AWCCC-1','AWCCC-2','AWCCC-3','AWCCC-7','AWH-KIT','AW-KIT-'],
+        whitelist: [],
+    },
+    {
+        groupName: 'Select Builder',
+        prefixes: ['AW-0','AW-25','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWH-KIT','AW-KIT-','AWSB-3','AWSB-4','AWSB-5','AWSB-6','AWSB-7','AWSB-8','AWSBC-1','AWSBC-2','AWSBC-3','AWSBC-7'],
+        whitelist: [],
+    },
+    {
+        groupName: 'Employees',
+        prefixes: ['AW'],
+        whitelist: [],
+    },
+    {
+        groupName: 'Insider',
+        prefixes: ['AW-0','AW-1','AW-20','AW-21','AW-25','AW-30','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWH-KIT','AW-KIT-'],
+        whitelist: [],
+    },
+    {
+        groupName: 'Other',
+        prefixes: ['AW-0','AW-1','AW-20','AW-21','AW-25','AW-30','AW-35','AW-4','AW-5','AW-6','AW-7','AW-8','AWB-','AWH-KIT','AW-KIT-'],
+        whitelist: [],
+    },
+];
+
+function parseRules() {
+    return RULES;
+}
+/*function parseRules(themeSettings) {
     const rules = [];
     for (let i = 1; i <= MAX_RULES; i++) {
         const groupName = themeSettings[`aw-filter-rule-${i}-group-name`];
@@ -25,7 +61,7 @@ function parseRules(themeSettings) {
         }
     }
     return rules;
-}
+}*/
 
 function shouldHideProduct(sku, customerGroupName, rules, superUserGroup) {
     if (customerGroupName === superUserGroup) {
@@ -53,8 +89,7 @@ export function applyProductFilter(context, containerSelector) {
     if (!themeSettings['aw-group-filter-enabled']) {
         return { filtered: false };
     }
-
-    const rules = parseRules(themeSettings);
+    const rules = parseRules();
     if (rules.length === 0) {
         document.body.classList.add('aw-filter-applied');
         return { filtered: false };

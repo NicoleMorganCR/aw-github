@@ -1,0 +1,11 @@
+{
+  "normalStoreUrl": "https://store-kycczgbh5g.mybigcommerce.com",
+  "port": 3000,
+  "packageManager": "npm",
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  }
+}
