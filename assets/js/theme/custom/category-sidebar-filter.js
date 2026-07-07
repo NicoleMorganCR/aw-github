@@ -42,8 +42,13 @@ function applyGroupFilter() {
     });
 }
 
-export function initCategorySidebarFilter() {
-    // Use event delegation so it still works after faceted search re-renders the sidebar
+export function initCategorySidebarFilter(context) {
+    if ((context.customerGroupName || '').toLowerCase() !== 'employees') {
+        const el = document.getElementById('aw-group-filter');
+        if (el) el.style.display = 'none';
+        return;
+    }
+
     document.addEventListener('change', (e) => {
         if (e.target.classList.contains('aw-group-filter-checkbox')) {
             applyGroupFilter();

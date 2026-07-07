@@ -39,7 +39,7 @@ export default class Category extends CatalogPage {
         compareProducts(this.context);
 
         this.initFacetedSearch();
-        initCategorySidebarFilter();
+        initCategorySidebarFilter(this.context);
 
         if (!$('#facetedSearch').length) {
             this.onSortBySubmit = this.onSortBySubmit.bind(this);

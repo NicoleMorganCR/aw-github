@@ -4,6 +4,7 @@ category:
         limit: {{theme_settings.categorypage_products_per_page}}
 ---
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
+{{inject "customerGroupName" customer.customer_group_name}}
 {{#partial "head"}}
     {{#if pagination.category.previous}}
         <link rel="prev" href="{{{pagination.category.previous}}}">
@@ -96,6 +97,7 @@ category:
         {{/if}}
       {{/if}}
 
+        {{#unless category.subcategories}}
         <div id="aw-group-filter" style="margin-bottom:16px;padding:12px 16px;border:1px solid #e5e5e5;border-radius:3px;background:#fff;">
             <strong style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:#333;display:block;margin-bottom:10px;">Filter by Group</strong>
             <div style="display:flex;flex-wrap:wrap;gap:12px;">
@@ -116,6 +118,7 @@ category:
                 </label>
             </div>
         </div>
+        {{/unless}}
 
         <div class="product-listing-container" id="product-listing-container">
             {{> components/category/product-listing}}
