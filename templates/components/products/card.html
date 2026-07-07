@@ -127,6 +127,10 @@
             </a>
         </span>
 
+        {{#if sku}}
+            <p class="card-text card-sku" style="color:#999;font-size:0.8em;margin-top:2px;">{{sku}}</p>
+        {{/if}}
+
         {{#and summary theme_settings.epic-card-summary}}
             <p class="card-text" data-test-info-type="summary">{{{ellipsis summary 100}}}</p>
         {{/and}}
