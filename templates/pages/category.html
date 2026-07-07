@@ -41,9 +41,19 @@ category:
         {{/if}}
       </div>
     {{/if}}
-    <aside class="page-sidebar" id="faceted-search-container">
-        {{> components/category/sidebar}}
-    </aside>
+    {{#if category.faceted_search_enabled}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/category/sidebar}}
+        </aside>
+    {{else if category.subcategories}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/category/sidebar}}
+        </aside>
+    {{else if theme_settings.shop_by_price_visibility}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/category/sidebar}}
+        </aside>
+    {{/if}}
 
     <main class="page-content">
       {{#unless theme_settings.epic-toggle-category-header-fullwidth}}
@@ -85,6 +95,27 @@ category:
           </div>
         {{/if}}
       {{/if}}
+
+        <div id="aw-group-filter" style="margin-bottom:16px;padding:12px 16px;border:1px solid #e5e5e5;border-radius:3px;background:#fff;">
+            <strong style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:#333;display:block;margin-bottom:10px;">Filter by Group</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#333;cursor:pointer;">
+                    <input type="checkbox" class="aw-group-filter-checkbox" value="employee"> Employees
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#333;cursor:pointer;">
+                    <input type="checkbox" class="aw-group-filter-checkbox" value="dealer"> Dealer
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#333;cursor:pointer;">
+                    <input type="checkbox" class="aw-group-filter-checkbox" value="cc"> Certified Contractor
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#333;cursor:pointer;">
+                    <input type="checkbox" class="aw-group-filter-checkbox" value="sb"> Select Builder
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#333;cursor:pointer;">
+                    <input type="checkbox" class="aw-group-filter-checkbox" value="insider"> Insider
+                </label>
+            </div>
+        </div>
 
         <div class="product-listing-container" id="product-listing-container">
             {{> components/category/product-listing}}

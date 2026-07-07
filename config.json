@@ -901,7 +901,7 @@
         "epic-breadcrumb-position": "left",
         "epic-page-heading-position": "left",
         "epic-sidebar-position-home": "none",
-        "epic-sidebar-position-category": "left",
+        "epic-sidebar-position-category": "none",
         "epic-sidebar-position-product": "none",
         "epic-sidebar-position-blog": "none",
         "epic-sidebar-position-other": "none",
