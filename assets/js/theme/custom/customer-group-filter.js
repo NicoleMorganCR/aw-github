@@ -159,30 +159,23 @@ export function adjustPaginationAfterFilter(filterResult, containerSelector) {
     }
 
     if (filterResult.visibleProducts === 0) {
-        // No visible products on this page — hide pagination and show message
-        const pagination = container.querySelector('nav.pagination');
-        if (pagination) {
-            pagination.style.display = 'none';
+        // Look for a "Next" page link in the pagination and auto-advance
+        const nextLink = document.querySelector('a[data-page-next], .pagination-item--next a, a[rel="next"]');
+        if (nextLink && nextLink.href) {
+            window.location.replace(nextLink.href);
+            return;
         }
+
+        // No next page — we're on the last page with no visible products
+        const pagination = container.querySelector('nav.pagination');
+        if (pagination) pagination.style.display = 'none';
 
         const wrapper = document.createElement('div');
         wrapper.className = 'aw-no-products-message';
 
         const msg = document.createElement('p');
-        msg.textContent = 'No more products are available.';
+        msg.textContent = 'No products are available for your group in this category.';
         wrapper.appendChild(msg);
-
-        // Build a "Go Back" button linking to the previous page
-        const url = new URL(window.location.href);
-        const currentPage = parseInt(url.searchParams.get('page'), 10) || 1;
-        if (currentPage > 1) {
-            url.searchParams.set('page', currentPage - 1);
-            const backBtn = document.createElement('a');
-            backBtn.href = url.toString();
-            backBtn.className = 'button button--primary';
-            backBtn.textContent = 'Go to Previous Page';
-            wrapper.appendChild(backBtn);
-        }
 
         const grid = container.querySelector('.productGrid, .productList');
         if (grid) {
