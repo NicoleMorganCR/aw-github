@@ -41,19 +41,9 @@ category:
         {{/if}}
       </div>
     {{/if}}
-    {{#if category.faceted_search_enabled}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/category/sidebar}}
-        </aside>
-    {{else if category.subcategories}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/category/sidebar}}
-        </aside>
-    {{else if theme_settings.shop_by_price_visibility}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/category/sidebar}}
-        </aside>
-    {{/if}}
+    <aside class="page-sidebar" id="faceted-search-container">
+        {{> components/category/sidebar}}
+    </aside>
 
     <main class="page-content">
       {{#unless theme_settings.epic-toggle-category-header-fullwidth}}
