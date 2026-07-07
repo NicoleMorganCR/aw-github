@@ -4,6 +4,7 @@ import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import { createTranslationDictionary } from './common/utils/translations-utils';
 import { applyProductFilter, adjustPaginationAfterFilter } from './custom/customer-group-filter';
+import { initCategorySidebarFilter } from './custom/category-sidebar-filter';
 
 export default class Category extends CatalogPage {
     constructor(context) {
@@ -38,6 +39,7 @@ export default class Category extends CatalogPage {
         compareProducts(this.context);
 
         this.initFacetedSearch();
+        initCategorySidebarFilter();
 
         if (!$('#facetedSearch').length) {
             this.onSortBySubmit = this.onSortBySubmit.bind(this);
