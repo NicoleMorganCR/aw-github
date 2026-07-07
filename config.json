@@ -905,7 +905,7 @@
         "epic-sidebar-position-product": "none",
         "epic-sidebar-position-blog": "none",
         "epic-sidebar-position-other": "none",
-        "epic-sidebar-type": "inline",
+        "epic-sidebar-type": "flyout",
         "epic-toggle-sidebar-webpages": false,
         "epic-sidebar-heading": "Site Navigation",
         "epic-sidebar-border-color": "#f6f3f3",
