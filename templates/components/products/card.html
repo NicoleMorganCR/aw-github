@@ -5,6 +5,7 @@
     data-event-type="{{event}}"
     data-entity-id="{{id}}"
     data-product-sku="{{sku}}"
+    {{#each custom_fields}}{{#if name '==' 'Allowed Groups'}}data-allowed-groups="{{value}}"{{/if}}{{/each}}
     data-position="{{position}}"
     data-name="{{name}}"
     data-product-category="

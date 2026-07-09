@@ -3,7 +3,7 @@ import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import { createTranslationDictionary } from './common/utils/translations-utils';
-import { applyProductFilter, adjustPaginationAfterFilter } from './custom/customer-group-filter';
+import { applyVisiblePagination, VP_REMOTES } from './custom/customer-group-filter';
 
 export default class Category extends CatalogPage {
     constructor(context) {
@@ -29,6 +29,8 @@ export default class Category extends CatalogPage {
     }
 
     onReady() {
+        applyVisiblePagination(this.context, VP_REMOTES.category, '#product-listing-container');
+
         this.arrangeFocusOnSortBy();
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
@@ -96,8 +98,7 @@ export default class Category extends CatalogPage {
             $productListingContainer.html(content.productListing);
             $facetedSearchContainer.html(content.sidebar);
 
-            const filterResult = applyProductFilter(this.context, '#product-listing-container');
-            adjustPaginationAfterFilter(filterResult, '#product-listing-container');
+            applyVisiblePagination(this.context, VP_REMOTES.category, '#product-listing-container');
 
             $('body').triggerHandler('compareReset');
 
