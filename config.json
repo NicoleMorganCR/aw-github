@@ -1,5 +1,5 @@
 {
-  "name": "AW Gear Theme (20)",
+  "name": "AW Gear Theme (21)",
   "version": "1.0.11",
   "template_engine": "handlebars_v4",
   "meta": {
@@ -574,10 +574,10 @@
         "productpage_reviews_count": 9,
         "productpage_related_products_count": 8,
         "productpage_similar_by_views_count": 8,
-        "categorypage_products_per_page": 200,
+        "categorypage_products_per_page": 24,
         "shop_by_price_visibility": true,
-        "brandpage_products_per_page": 200,
-        "searchpage_products_per_page": 200,
+        "brandpage_products_per_page": 24,
+        "searchpage_products_per_page": 24,
         "show_product_quick_view": true,
         "show_powered_by": false,
         "shop_by_brand_show_footer": false,

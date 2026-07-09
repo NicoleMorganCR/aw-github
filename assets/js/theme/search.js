@@ -8,7 +8,7 @@ import Url from 'url';
 import collapsibleFactory from './common/collapsible';
 import 'jstree';
 import nod from './common/nod';
-import { applyProductFilter, adjustPaginationAfterFilter } from './custom/customer-group-filter';
+import { applyVisiblePagination, VP_REMOTES } from './custom/customer-group-filter';
 
 const leftArrowKey = 37;
 const rightArrowKey = 39;
@@ -145,6 +145,8 @@ export default class Search extends CatalogPage {
         this.$productListingContainer = $('#product-listing-container');
         this.$facetedSearchContainer = $('#faceted-search-container');
         this.$contentResultsContainer = $('#search-results-content');
+
+        applyVisiblePagination(this.context, VP_REMOTES.search, '#product-listing-container');
 
         // Init faceted search
         if ($('#facetedSearch').length > 0) {
@@ -303,8 +305,7 @@ export default class Search extends CatalogPage {
                 $productListingContainer.html(content.productListing);
                 $facetedSearchContainer.html(content.sidebar);
                 $searchCount.html(content.productCount);
-                const filterResult = applyProductFilter(this.context, '#product-listing-container');
-                adjustPaginationAfterFilter(filterResult, '#product-listing-container');
+                applyVisiblePagination(this.context, VP_REMOTES.search, '#product-listing-container');
                 this.showProducts(false);
             }
 

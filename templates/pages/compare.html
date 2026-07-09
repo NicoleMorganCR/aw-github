@@ -127,7 +127,9 @@
                         {{#if custom_fields}}
                             <ul>
                                 {{#each custom_fields}}
-                                    <li>{{name}}: {{{value}}}</li>
+                                    {{#if name '!==' 'Allowed Groups'}}
+                                        <li>{{name}}: {{{value}}}</li>
+                                    {{/if}}
                                 {{/each}}
                             </ul>
                         {{else}}
