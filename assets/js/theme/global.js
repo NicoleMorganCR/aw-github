@@ -33,9 +33,23 @@ export default class Global extends PageManager {
         svgInjector();
         customScripts(this.context);
 
-        const filterResult = applyProductFilter(this.context);
-        adjustPaginationAfterFilter(filterResult);
-        
+        // Listing pages rebuild their own grid via applyVisiblePagination, so leave
+        // the listing to it here and only filter the other surfaces (carousels, etc).
+        const isListingPage = !!document.getElementById('product-listing-container');
+
+        if (isListingPage) {
+            const overlay = document.querySelector('.aw-loading-overlay');
+            const host = document.querySelector('.page-content');
+            if (overlay && host && overlay.parentElement !== host) {
+                host.appendChild(overlay);
+            }
+            document.body.classList.add('aw-vp-pending');
+            applyProductFilter(this.context, undefined, { exclude: '#product-listing-container' });
+        } else {
+            const filterResult = applyProductFilter(this.context);
+            adjustPaginationAfterFilter(filterResult);
+        }
+
         // Listen for cart updates on any page
         onCartUpdate((update) => {
             console.log('Cart updated:', update);

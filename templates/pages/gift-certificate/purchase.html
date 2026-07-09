@@ -95,8 +95,40 @@
                         </label>
                         <div class="form-field form-field-group">
                             {{#each forms.gift_certificate.themes}}
+                                {{#if this.display '==' 'General'}}
                                 <input type="radio" class="form-radio" name="certificate_theme" id="theme_{{this.value}}" value="{{this.value}}"{{#if this.value '==' ../forms.gift_certificate.values.theme}} checked{{/if}}>
-                                <label class="form-label" for="theme_{{this.value}}">{{this.display}}</label>
+                                <label class="form-label" for="theme_{{this.value}}">General</label>
+                                {{/if}}
+                            {{/each}}
+                            {{#each forms.gift_certificate.themes}}
+                                {{#if this.display '==' 'Boy'}}
+                                <input type="radio" class="form-radio" name="certificate_theme" id="theme_{{this.value}}" value="{{this.value}}"{{#if this.value '==' ../forms.gift_certificate.values.theme}} checked{{/if}}>
+                                <label class="form-label" for="theme_{{this.value}}">Work Anniversary</label>
+                                {{/if}}
+                            {{/each}}
+                            {{#each forms.gift_certificate.themes}}
+                                {{#if this.display '==' 'Celebration'}}
+                                <input type="radio" class="form-radio" name="certificate_theme" id="theme_{{this.value}}" value="{{this.value}}"{{#if this.value '==' ../forms.gift_certificate.values.theme}} checked{{/if}}>
+                                <label class="form-label" for="theme_{{this.value}}">Celebration</label>
+                                {{/if}}
+                            {{/each}}
+                            {{#each forms.gift_certificate.themes}}
+                                {{#if this.display '==' 'Birthday'}}
+                                <input type="radio" class="form-radio" name="certificate_theme" id="theme_{{this.value}}" value="{{this.value}}"{{#if this.value '==' ../forms.gift_certificate.values.theme}} checked{{/if}}>
+                                <label class="form-label" for="theme_{{this.value}}">Birthday</label>
+                                {{/if}}
+                            {{/each}}
+                            {{#each forms.gift_certificate.themes}}
+                                {{#if this.display '==' 'Christmas'}}
+                                <input type="radio" class="form-radio" name="certificate_theme" id="theme_{{this.value}}" value="{{this.value}}"{{#if this.value '==' ../forms.gift_certificate.values.theme}} checked{{/if}}>
+                                <label class="form-label" for="theme_{{this.value}}">Holiday</label>
+                                {{/if}}
+                            {{/each}}
+                            {{#each forms.gift_certificate.themes}}
+                                {{#if this.display '==' 'Girl'}}
+                                <input type="radio" class="form-radio" name="certificate_theme" id="theme_{{this.value}}" value="{{this.value}}"{{#if this.value '==' ../forms.gift_certificate.values.theme}} checked{{/if}}>
+                                <label class="form-label" for="theme_{{this.value}}">New Baby</label>
+                                {{/if}}
                             {{/each}}
                         </div>
                     </fieldset>
