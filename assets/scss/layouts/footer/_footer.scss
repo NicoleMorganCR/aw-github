@@ -121,14 +121,11 @@
 }
 
 .footer-info-list--columns {
-    // Up to 2 columns, each at least 170px wide; collapses to 1 column
-    // automatically if the footer column isn't wide enough for that.
-    columns: 2 170px;
-    column-gap: 2rem;
+    column-count: 2;
+    column-gap: 1rem;
 
     li {
         break-inside: avoid;
-        white-space: nowrap;
     }
 }
 
