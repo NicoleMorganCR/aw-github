@@ -348,6 +348,38 @@ Transferred GC Balance End
     margin-bottom: 2.5rem !important;
 }
 
+// ================================
+// Homepage Hero Carousel - full bleed, flush to nav, consistent 20px gap below
+// ================================
+
+// Only pages with the carousel lose the top gap, so other pages are unaffected
+.body:has(.heroCarousel) {
+    margin-top: 0 !important;
+}
+
+.heroCarousel {
+    left: 50%;
+    margin-bottom: 20px !important;
+    margin-left: -50vw !important;
+    margin-top: 0 !important;
+    max-width: 100vw !important;
+    position: relative;
+    width: 100vw !important;
+}
+
+// All banners are the same 1938x500 size, so just let each slide size itself
+// to the image's natural ratio instead of the theme's per-shape vw-based
+// heights, which was leaving a large empty gap under the banner on mobile
+.heroCarousel-image-wrapper {
+    height: auto !important;
+    max-height: none !important;
+}
+
+.heroCarousel-image {
+    height: auto !important;
+    width: 100% !important;
+}
+
 .aw-cta-banner {
     background-image: url('https://cdn11.bigcommerce.com/s-kycczgbh5g/images/stencil/original/image-manager/banner2.jpg?t=1779906206');
     background-size: cover;
