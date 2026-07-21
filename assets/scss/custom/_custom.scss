@@ -367,16 +367,19 @@ Transferred GC Balance End
     width: 100vw !important;
 }
 
-// All banners are the same 1938x500 size, so just let each slide size itself
-// to the image's natural ratio instead of the theme's per-shape vw-based
-// heights, which was leaving a large empty gap under the banner on mobile
+// All banners are the same 1938x500 size. The ratio is fixed on the wrapper
+// (not read from the <img> itself) because lazy-loaded slides briefly show a
+// 1x1 placeholder gif before their real image loads - sizing from the image's
+// own intrinsic ratio made those slides render as a huge square the width of
+// the carousel until the real banner loaded in.
 .heroCarousel-image-wrapper {
+    aspect-ratio: 3.876 !important;
     height: auto !important;
     max-height: none !important;
 }
 
 .heroCarousel-image {
-    height: auto !important;
+    height: 100% !important;
     width: 100% !important;
 }
 
