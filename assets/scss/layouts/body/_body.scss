@@ -61,6 +61,7 @@
     display: none;
   } @else {
     @include sidebarState($type: stencilString("epic-sidebar-type"), $direction: stencilString("epic-sidebar-position-other"));
+    display: block;
   }
 
   + .page-content {
@@ -97,6 +98,7 @@
       display: none;
     } @else {
       @include sidebarState($type: stencilString("epic-sidebar-type"), $direction: stencilString("epic-sidebar-position-category"));
+      display: block;
     }
 
     + .page-content {
@@ -133,6 +135,7 @@
       display: none;
     } @else {
       @include sidebarState($type: stencilString("epic-sidebar-type"), $direction: stencilString("epic-sidebar-position-home"));
+      display: block;
     }
 
     + .page-content {
@@ -169,6 +172,7 @@
       display: none;
     } @else {
       @include sidebarState($type: stencilString("epic-sidebar-type"), $direction: stencilString("epic-sidebar-position-product"));
+      display: block;
     }
 
     + .page-content {
@@ -207,6 +211,7 @@
       display: none;
     } @else {
       @include sidebarState($type: stencilString("epic-sidebar-type"), $direction: stencilString("epic-sidebar-position-blog"));
+      display: block;
     }
 
     + .page-content {
