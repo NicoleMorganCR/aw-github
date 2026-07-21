@@ -349,7 +349,9 @@ Transferred GC Balance End
 }
 
 // ================================
-// Homepage Hero Carousel - full bleed, flush to nav, consistent 20px gap below
+// Homepage Hero Carousel - full bleed, flush to nav, matches the 2.5rem
+// grey-spacing rhythm used below the New Products card (.aw-cta-banner's
+// margin-top) so the gap above and below that card is even
 // ================================
 
 // Only pages with the carousel lose the top gap, so other pages are unaffected
@@ -359,7 +361,7 @@ Transferred GC Balance End
 
 .heroCarousel {
     left: 50%;
-    margin-bottom: 20px !important;
+    margin-bottom: 2.5rem !important;
     margin-left: -50vw !important;
     margin-top: 0 !important;
     max-width: 100vw !important;
