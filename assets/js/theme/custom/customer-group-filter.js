@@ -362,6 +362,19 @@ function vpBuildPagination(total, current) {
     return `<nav class="pagination" aria-label="pagination" data-aw-pagination><ul class="pagination-list">${items}</ul></nav>`;
 }
 
+function vpUpdateCount(container, total) {
+    const bar = container.querySelector('.actionBar');
+    if (!bar) return;
+    let el = container.querySelector('.aw-visible-count');
+    if (!el) {
+        el = document.createElement('span');
+        el.className = 'aw-visible-count';
+        container.appendChild(el);
+    }
+    el.textContent = total > 0 ? `${total} ${total === 1 ? 'Product' : 'Products'}` : '';
+    el.style.top = `${bar.offsetTop + bar.offsetHeight / 4}px`;
+}
+
 function vpRenderCurrent() {
     if (!vpState) return;
     const { container, grid, visible, perPage } = vpState;
@@ -370,6 +383,7 @@ function vpRenderCurrent() {
     container.querySelectorAll('nav.pagination').forEach((n) => n.remove());
 
     if (visible.length === 0) {
+        vpUpdateCount(container, 0);
         grid.innerHTML = '';
         const msg = document.createElement('p');
         msg.className = 'aw-no-products-message';
@@ -392,6 +406,7 @@ function vpRenderCurrent() {
     }
 
     grid.innerHTML = visible.slice((page - 1) * perPage, page * perPage).join('');
+    vpUpdateCount(container, visible.length);
 
     const nav = vpBuildPagination(total, page);
     if (nav) grid.insertAdjacentHTML('afterend', nav);
