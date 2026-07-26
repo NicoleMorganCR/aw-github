@@ -30,7 +30,9 @@ category:
         {{{region name="category_above_header"}}}
         {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
         {{#unless theme_settings.hide_category_page_heading }}
-            <h1 class="page-heading">{{category.name}}</h1>
+            {{#unless category.image}}
+                <h1 class="page-heading">{{category.name}}</h1>
+            {{/unless}}
             {{{region name="category_below_header"}}}
         {{/unless}}
 
@@ -62,7 +64,9 @@ category:
         {{{region name="category_above_header"}}}
         {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
         {{#unless theme_settings.hide_category_page_heading }}
-            <h1 class="page-heading">{{category.name}}</h1>
+            {{#unless category.image}}
+                <h1 class="page-heading">{{category.name}}</h1>
+            {{/unless}}
             {{{region name="category_below_header"}}}
         {{/unless}}
 
