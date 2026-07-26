@@ -385,6 +385,25 @@ Transferred GC Balance End
     width: 100% !important;
 }
 
+// ================================
+// Category page banner - sits in the "hero" slot (a sibling of .container,
+// same spot the homepage carousel uses) so it's outside the breadcrumbs/
+// sidebar column and needs no full-bleed trick, just full width. The
+// sitewide 2.5rem top gap is moved from above the banner to below it, so
+// nav-to-banner is flush and banner-to-breadcrumb keeps the same spacing
+// that was already there before the banner existed.
+// ================================
+.body:has(.category-header-image) {
+    margin-top: 0 !important;
+}
+
+.category-header-image {
+    display: block !important;
+    margin-bottom: 2.5rem !important;
+    margin-top: 0 !important;
+    width: 100% !important;
+}
+
 .aw-cta-banner {
     background-image: url('https://cdn11.bigcommerce.com/s-kycczgbh5g/images/stencil/original/image-manager/banner2.jpg?t=1779906206');
     background-size: cover;
