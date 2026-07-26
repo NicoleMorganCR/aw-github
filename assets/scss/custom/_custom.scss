@@ -404,6 +404,19 @@ Transferred GC Balance End
     width: 100% !important;
 }
 
+// Below 800px, crop the same banner image to a fixed 350px band instead of
+// showing its full (wider) aspect ratio - keeps the centered content
+// visible and lets the sides (e.g. product shots flanking the text) run
+// off-screen rather than shrinking the whole banner down. Desktop is
+// unaffected since object-fit/height only apply in this media query.
+@media (max-width: 799px) {
+    .category-header-image {
+        height: 350px !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+    }
+}
+
 .aw-cta-banner {
     background-image: url('https://cdn11.bigcommerce.com/s-kycczgbh5g/images/stencil/original/image-manager/banner2.jpg?t=1779906206');
     background-size: cover;
