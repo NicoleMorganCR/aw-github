@@ -52,6 +52,15 @@
             .productCarousel-slide {
                 animation: aw-reveal 0s 2s forwards;
             }
+            #product-listing-container { position: relative; }
+            .aw-visible-count {
+                position: absolute;
+                right: 0;
+                transform: translateY(-50%);
+                font-size: 14px;
+                color: #555;
+                white-space: nowrap;
+            }
             /* Hide the listing while it rebuilds; search is excluded. */
             body.aw-vp-pending:not(.page-type_search) #product-listing-container > * {
                 visibility: hidden !important;
