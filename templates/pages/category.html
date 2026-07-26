@@ -79,6 +79,7 @@ category:
         {{/if}}
       {{/unless}}
 
+      {{#unless category.image}}
       {{#if theme_settings.epic-toggle-category-refine-subcategories}}
         {{#if category.subcategories}}
           <div class="subcategoryListing">
@@ -93,6 +94,7 @@ category:
           </div>
         {{/if}}
       {{/if}}
+      {{/unless}}
 
         <div class="product-listing-container" id="product-listing-container">
             {{> components/category/product-listing}}
