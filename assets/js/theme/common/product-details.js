@@ -108,7 +108,6 @@ export default class ProductDetails extends ProductDetailsBase {
 
         $productOptionsElement.show();
         
-        setTimeout(() => this.selectFirstVariant(), 1000);
         this.previewModal = modalFactory('#previewModal')[0];
         this.initModifierOptions();
     }
@@ -600,51 +599,6 @@ export default class ProductDetails extends ProductDetailsBase {
             bubbles: true,
             detail: { productDetails },
         }));
-    }
-
-    selectFirstVariant() {
-        const $form = $('[data-cart-item-add]');
-
-        // Handle dropdowns
-        const $dropdowns = $form.find('[data-product-option-change] select');
-        $dropdowns.each((index, element) => {
-            const $select = $(element);
-            const $options = $select.find('option:not([value=""])').not(':disabled');
-            
-            if ($options.length > 0) {
-                const $firstOption = $options.first();
-                $firstOption.prop('selected', true).trigger('change');
-            }
-        });
-
-        // Handle radio buttons (rectangles and swatches)
-        const $radios = $form.find('[data-product-option-change] input[type="radio"]');
-        $radios.each((index, element) => {
-            const $radio = $(element);
-        });
-
-        // Group by name and select first in each group
-        const radioGroups = {};
-        $radios.each((index, element) => {
-            const $radio = $(element);
-            const name = $radio.attr('name');
-            if (!radioGroups[name]) {
-                radioGroups[name] = [];
-            }
-            radioGroups[name].push($radio);
-        });
-
-        Object.keys(radioGroups).forEach(name => {
-            const group = radioGroups[name];
-            const hasChecked = group.some(radio => radio.is(':checked'));
-            if (!hasChecked) {
-                const uncheckedEnabled = group.filter(radio => !radio.is(':checked') && radio.is(':enabled'));
-                if (uncheckedEnabled.length > 0) {
-                    const $firstRadio = uncheckedEnabled[0];
-                    $firstRadio.prop('checked', true).trigger('change');
-                }
-            }
-        });
     }
 
     updateDateSelector() {
