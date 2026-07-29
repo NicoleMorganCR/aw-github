@@ -29,6 +29,14 @@ export default class ProductDetails extends ProductDetailsBase {
         this.storeInitMessagesForSwatches();
         this.updateDateSelector();
 
+        // State for the one-shot automatic first-variant selection
+        this.autoSelectState = {
+            started: false,
+            done: false,
+            aborted: false,
+            processedGroups: [],
+        };
+
         const $form = $('form[data-cart-item-add]', $scope);
 
         if ($form[0].checkValidity()) {
@@ -82,6 +90,13 @@ export default class ProductDetails extends ProductDetailsBase {
         }
 
         $productOptionsElement.on('change', event => {
+            // A change with an originalEvent comes from a real user interaction.
+            // If it happens before auto-selection has finished, hand control
+            // back to the user and never auto-select again.
+            if (event.originalEvent && !this.autoSelectState.done) {
+                this.autoSelectState.aborted = true;
+            }
+
             this.productOptionsChanged(event);
             this.setProductVariant();
         });
@@ -100,10 +115,18 @@ export default class ProductDetails extends ProductDetailsBase {
             const $productId = $('[name="product_id"]', $form).val();
             const optionChangeCallback = optionChangeDecorator.call(this, hasDefaultOptions);
 
-            utils.api.productAttributes.optionChange($productId, $form.serialize(), 'products/bulk-discount-rates', optionChangeCallback);
+            utils.api.productAttributes.optionChange($productId, $form.serialize(), 'products/bulk-discount-rates', (err, response) => {
+                optionChangeCallback(err, response);
+
+                // At this point BigCommerce has finished its initial availability
+                // pass (unavailable values are hidden/labelled), so it is now
+                // safe to start auto-selecting the first available values.
+                this.autoSelectFirstAvailableOptions($form);
+            });
         } else {
             this.updateProductAttributes(productAttributesData);
             bannerUtils.dispatchProductBannerEvent(productAttributesData);
+            this.autoSelectFirstAvailableOptions($form);
         }
 
         $productOptionsElement.show();
@@ -564,6 +587,13 @@ export default class ProductDetails extends ProductDetailsBase {
     updateProductAttributes(data) {
         super.updateProductAttributes(data);
         this.showProductImage(data.image);
+
+        // Keep the latest availability payload so auto-selection can skip
+        // out-of-stock values regardless of the configured OOS behavior
+        if (data && Array.isArray(data.in_stock_attributes)) {
+            this.inStockAttributeIds = data.in_stock_attributes;
+            this.outOfStockBehavior = data.out_of_stock_behavior;
+        }
     }
 
     updateProductDetailsData() {
@@ -599,6 +629,223 @@ export default class ProductDetails extends ProductDetailsBase {
             bubbles: true,
             detail: { productDetails },
         }));
+    }
+
+    /**
+     * Automatically select the first available value for every unselected
+     * variant option, one option at a time. Runs once, after BigCommerce's
+     * initial availability pass has hidden/labelled unavailable values.
+     *
+     * Options may be dependent on each other, so after each selection we wait
+     * for the 'onProductOptionsChanged' event (dispatched by
+     * productOptionsChanged() once the remote recalculation completes) before
+     * selecting the next option. Aborts as soon as the user interacts.
+     */
+    autoSelectFirstAvailableOptions($form) {
+        const state = this.autoSelectState;
+
+        if (state.started) {
+            return;
+        }
+        state.started = true;
+
+        // Modifier fields with their own show/hide logic (see initModifierOptions)
+        const excludedLabelPatterns = [/cobrand/i, /dst file/i];
+
+        const processNextOption = () => {
+            if (state.aborted) {
+                state.done = true;
+                return;
+            }
+
+            const $group = this.getNextAutoSelectableOption($form, excludedLabelPatterns);
+
+            if (!$group) {
+                state.done = true;
+                // Re-sync the radio deselect-toggle state after programmatic checks
+                this.initRadioAttributes();
+                return;
+            }
+
+            if (!this.selectFirstAvailableValue($group)) {
+                // Nothing selectable in this group (already selected or fully
+                // out of stock) — move straight on to the next one
+                processNextOption();
+                return;
+            }
+
+            // The triggered change runs productOptionsChanged(), which lets
+            // BigCommerce recalculate availability of the remaining options.
+            // Wait for it to finish before touching the next option.
+            this.waitForOptionsRecalculation(processNextOption);
+        };
+
+        processNextOption();
+    }
+
+    /**
+     * Return the next variant option group that has not been processed yet,
+     * or null when every group has been handled. Each group is returned at
+     * most once, which guarantees the auto-selection loop terminates even if
+     * a selection causes options to re-render.
+     */
+    getNextAutoSelectableOption($form, excludedLabelPatterns) {
+        const autoSelectableTypes = ['set-select', 'set-rectangle', 'set-radio', 'swatch'];
+        const { processedGroups } = this.autoSelectState;
+        let $nextGroup = null;
+
+        $('[data-product-attribute]', $form).each((__, group) => {
+            const $group = $(group);
+            const type = $group.data('productAttribute');
+
+            if (autoSelectableTypes.indexOf(type) === -1) {
+                return true;
+            }
+
+            // Identify the group by its input/select name (attribute[<optionId>])
+            const groupId = $group.find('select, input[type="radio"]').first().attr('name');
+
+            if (!groupId || processedGroups.indexOf(groupId) !== -1) {
+                return true;
+            }
+
+            const labelText = $group.find('.form-label').first().text();
+
+            if (excludedLabelPatterns.some(pattern => pattern.test(labelText))) {
+                processedGroups.push(groupId);
+                return true;
+            }
+
+            processedGroups.push(groupId);
+            $nextGroup = $group;
+
+            return false; // break out of .each()
+        });
+
+        return $nextGroup;
+    }
+
+    /**
+     * Select the first available, in-stock, non-placeholder value inside a
+     * single option group and trigger the change event so BigCommerce's
+     * native variant logic runs. Groups that already have a real selection
+     * are left untouched.
+     *
+     * @returns {boolean} true if a change event was triggered
+     */
+    selectFirstAvailableValue($group) {
+        const type = $group.data('productAttribute');
+
+        if (type === 'set-select') {
+            // The select-option plugin moves hidden (out of stock) options into
+            // a disabled placeholder <select>, so only query the enabled one
+            const $select = $group.find('select').not(':disabled').first();
+
+            if (!$select.length || $select.val()) {
+                return false;
+            }
+
+            const $candidate = $select.find('option').filter((__, option) => (
+                option.value !== ''
+                && !option.disabled
+                && this.isAttributeValueAvailable(option.value)
+            )).first();
+
+            if (!$candidate.length) {
+                return false;
+            }
+
+            $select.val($candidate.val()).trigger('change');
+
+            return true;
+        }
+
+        // set-rectangle, set-radio and swatch are all radio groups
+        const $radios = $group.find('input[type="radio"]');
+        const $checked = $radios.filter(':checked');
+
+        // A checked radio with a non-empty value is a real existing selection
+        // (the optional "None" radio has value="" and does not count)
+        if ($checked.length && $checked.val() !== '') {
+            return false;
+        }
+
+        let $candidate = null;
+
+        $radios.each((__, radio) => {
+            const $radio = $(radio);
+            const value = $radio.val();
+
+            if (value === '' || radio.disabled || !this.isAttributeValueAvailable(value)) {
+                return true;
+            }
+
+            // Out-of-stock values keep their input but BigCommerce hides or
+            // labels the matching [data-product-attribute-value] label
+            const $label = $group.find(`[data-product-attribute-value="${value}"]`);
+
+            if (!$label.length || $label.hasClass('unavailable') || $label.css('display') === 'none') {
+                return true;
+            }
+
+            $candidate = $radio;
+
+            return false; // break out of .each()
+        });
+
+        if (!$candidate) {
+            return false;
+        }
+
+        $candidate
+            .prop('checked', true)
+            .data('state', true)
+            .attr('data-state', 'true')
+            .trigger('change');
+
+        return true;
+    }
+
+    /**
+     * A value is available when it appears in the latest in_stock_attributes
+     * payload. When the store is not configured to hide/label out-of-stock
+     * options (or no payload has been seen yet) every value is considered
+     * available, matching BigCommerce's own behavior.
+     */
+    isAttributeValueAvailable(attributeValueId) {
+        if (this.outOfStockBehavior !== 'hide_option' && this.outOfStockBehavior !== 'label_option') {
+            return true;
+        }
+
+        if (!Array.isArray(this.inStockAttributeIds)) {
+            return true;
+        }
+
+        return this.inStockAttributeIds.indexOf(parseInt(attributeValueId, 10)) !== -1;
+    }
+
+    /**
+     * Invoke the callback once BigCommerce has finished recalculating option
+     * availability, signalled by the 'onProductOptionsChanged' event that
+     * productOptionsChanged() dispatches after its ajax round trip. A safety
+     * timeout covers the case where the request fails and no event arrives.
+     */
+    waitForOptionsRecalculation(callback) {
+        let settled = false;
+        let fallbackTimer = null;
+
+        const settle = () => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(fallbackTimer);
+            document.removeEventListener('onProductOptionsChanged', settle);
+            callback();
+        };
+
+        document.addEventListener('onProductOptionsChanged', settle, { once: true });
+        fallbackTimer = setTimeout(settle, 5000);
     }
 
     updateDateSelector() {
