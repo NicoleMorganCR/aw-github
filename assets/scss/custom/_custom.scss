@@ -552,7 +552,9 @@ Transferred GC Balance End
         padding-left: 0.55rem;
         padding-right: 0.55rem;
     }
+}
 
+@media (min-width: 801px) {
     // Tighten dropdown arrow closer to link text
     .navPages-list-depth-max > .navPages-item .navPages-action-moreIcon {
         margin-left: 2px;
