@@ -469,7 +469,15 @@ Transferred GC Balance End
 }
 
 // Shrink main nav link font size and spacing so all links fit on one line
-@media (min-width: 801px) {
+@media (min-width: 801px) and (max-width: 1399px) {
+    .navPages-list-depth-max > .navPages-item > .navPages-action {
+        font-size: 10px;
+        padding-left: 0.55rem;
+        padding-right: 0.55rem;
+    }
+}
+
+@media (min-width: 1400px) {
     .navPages-list-depth-max > .navPages-item > .navPages-action {
         font-size: 12px;
         padding-left: 0.55rem;
