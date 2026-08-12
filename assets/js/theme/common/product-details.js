@@ -59,6 +59,19 @@ export default class ProductDetails extends ProductDetailsBase {
         const $productOptionsElement = $('[data-product-option-change]', $form);
         const hasOptions = $productOptionsElement.html().trim().length;
         const hasDefaultOptions = $productOptionsElement.find('[data-default]').length;
+
+        // For simple products (no options), BC may not include price in the Stencil
+        // context when the product is out of stock. Make an API call on page load to
+        // fetch current price data so it always displays regardless of stock status.
+        if (!hasOptions) {
+            const productId = $('[name="product_id"]', $form).val();
+            if (productId) {
+                utils.api.productAttributes.optionChange(productId, $form.serialize(), 'products/bulk-discount-rates', (err, response) => {
+                    if (err || !response || !response.data) return;
+                    this.updateView(response.data, response.content || {});
+                });
+            }
+        }
         const $productSwatchGroup = $('[id*="attribute_swatch"]', $form);
         const $productSwatchLabels = $('.form-option-swatch', $form);
         const placeSwatchLabelImage = (_, label) => {
