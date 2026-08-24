@@ -147,7 +147,7 @@ export function applyProductFilter(context, containerSelector, options = {}) {
         return { filtered: false };
     }
 
-    const productElements = scope.querySelectorAll('[data-product-sku]');
+    const productElements = scope.querySelectorAll('[data-product-sku][data-entity-id]');
     const excludeRoot = options.exclude ? document.querySelector(options.exclude) : null;
     let visibleProducts = 0;
     let hiddenProducts = 0;
@@ -246,7 +246,7 @@ function vpRequestedPage() {
 
 function vpScrape(doc, containerSelector) {
     const scope = doc.querySelector(containerSelector) || doc;
-    return Array.from(scope.querySelectorAll('[data-product-sku]')).map((el) => {
+    return Array.from(scope.querySelectorAll('[data-product-sku][data-entity-id]')).map((el) => {
         const wrapper = el.closest('li.product') || el;
         return {
             sku: el.getAttribute('data-product-sku') || '',
