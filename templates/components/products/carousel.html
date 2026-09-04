@@ -1,5 +1,6 @@
 <section class="productCarousel"
     data-list-name="{{list}}"
+    {{#if category_ids}}data-category-ids="{{category_ids}}" data-products-limit="{{products_limit}}"{{/if}}
     data-slick='{
         "infinite": false,
         "mobileFirst": true,

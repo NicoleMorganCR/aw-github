@@ -1,2 +1,4 @@
-<h2 class="page-heading">{{lang 'products.new' }}</h2>
-{{> components/products/carousel products=products list="New Products"}}
+<div class="newProducts" data-new-products{{#if theme_settings.homepage_new_products_category_ids}} hidden{{/if}}>
+    <h2 class="page-heading">{{lang 'products.new' }}</h2>
+    {{> components/products/carousel products=products list="New Products" category_ids=theme_settings.homepage_new_products_category_ids products_limit=theme_settings.homepage_new_products_count}}
+</div>

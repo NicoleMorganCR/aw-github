@@ -2773,6 +2773,9 @@
     "pl": "Liczba najpopularniejszych produktów",
     "ja": "最も人気のある商品数"
   },
+  "i18n.NewProductsCategoryIds": {
+    "default": "New products category IDs (comma-separated)"
+  },
   "i18n.NumberOfNewProducts": {
     "default": "Number of new products",
     "fr": "Nombre de nouveaux produits",

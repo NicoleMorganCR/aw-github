@@ -1,0 +1,5 @@
+{{#each comparisons}}
+    <div data-product-slide class="productCarousel-slide" data-product-id="{{id}}">
+        {{> components/products/card settings=../settings theme_settings=../theme_settings customer=../customer event="list"}}
+    </div>
+{{/each}}

@@ -1207,6 +1207,14 @@
             "label": "12"
           }
         ]
+      },
+      {
+        "type": "text",
+        "label": "i18n.NewProductsCategoryIds",
+        "id": "homepage_new_products_category_ids",
+        "force_reload": true,
+        "reference": "homepage_new_products_count",
+        "reference_default": "0"
       }
     ]
   },
