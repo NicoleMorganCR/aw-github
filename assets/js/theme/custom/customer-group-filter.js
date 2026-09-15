@@ -118,6 +118,25 @@ function readProductFromEl(el) {
     };
 }
 
+// Same decision applyProductFilter makes, as a predicate over a product's raw "Allowed Groups"
+// value, for surfaces that fetch product data (e.g. via GraphQL) instead of filtering cards
+// already in the DOM.
+export function createAllowedGroupsCheck(context) {
+    const themeSettings = context.themeSettings || {};
+    const customerGroupName = context.customerGroupName || null;
+    const superUserGroup = (themeSettings['aw-super-user-group'] || '').trim();
+
+    if (!themeSettings['aw-group-filter-enabled'] || parseRules().length === 0 || customerGroupName === superUserGroup) {
+        return () => true;
+    }
+
+    return allowedGroupsRaw => !isProductHidden(
+        { allowedGroups: parseAllowedGroups(allowedGroupsRaw) },
+        customerGroupName,
+        superUserGroup,
+    );
+}
+
 export function applyProductFilter(context, containerSelector, options = {}) {
     const themeSettings = context.themeSettings || {};
 
