@@ -46,7 +46,7 @@ export default class Global extends PageManager {
             document.body.classList.add('aw-vp-pending');
             applyProductFilter(this.context, undefined, { exclude: '#product-listing-container' });
         } else {
-            const filterResult = applyProductFilter(this.context);
+            const filterResult = applyProductFilter(this.context, undefined, { exclude: '.productView' });
             adjustPaginationAfterFilter(filterResult);
         }
 
