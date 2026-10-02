@@ -1,15 +1,17 @@
 (function () {
 
+  // BC auto-generates variant SKUs ending in a 2-char size code + 2-letter color code
+  // (e.g. -ME-NA, -LA-GR, -2X-HE, sometimes with a trailing -1). Real SKUs never end this way.
+  var AUTO_GENERATED_SKU = /-[A-Z0-9]{2}-[A-Z]{2}(-\d+)?$/;
+
+  var VARIANT_OPTION_SELECTOR =
+    '[data-product-attribute="set-select"],' +
+    '[data-product-attribute="set-radio"],' +
+    '[data-product-attribute="set-rectangle"],' +
+    '[data-product-attribute="swatch"]';
+
   function isInvalidSku(sku) {
-    if (!sku) return false;
-    var parts = sku.split('-');
-    // Real variant SKUs always contain a 4-digit inventory code (e.g. 0471, 0048)
-    // Auto-generated SKUs never do — they use abbreviations like 2X, HE, SM, NA
-    if (parts.length <= 2) return false; // Simple SKUs (AW-0005) are always valid
-    for (var i = 2; i < parts.length; i++) {
-      if (/^\d{4}$/.test(parts[i])) return false; // Found a real inventory code
-    }
-    return true; // No 4-digit code found — likely auto-generated
+    return !!sku && AUTO_GENERATED_SKU.test(sku);
   }
 
   function updateUI(isInvalid) {
@@ -42,6 +44,10 @@
     return originalResult.then(function (data) {
       try {
         if (data && data.data) {
+          // Products without variant options have no combination to get wrong — never block them
+          var form = document.querySelector('form[data-cart-item-add]');
+          if (!form || !form.querySelector(VARIANT_OPTION_SELECTOR)) return data;
+
           var variantId = data.data.variantId;
           var sku = data.data.sku || '';
           var invalid = !variantId || isInvalidSku(sku);
