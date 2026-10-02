@@ -1207,6 +1207,14 @@
             "label": "12"
           }
         ]
+      },
+      {
+        "type": "text",
+        "label": "i18n.NewProductsCategoryIds",
+        "id": "homepage_new_products_category_ids",
+        "force_reload": true,
+        "reference": "homepage_new_products_count",
+        "reference_default": "0"
       }
     ]
   },
@@ -4445,138 +4453,6 @@
         "label": "Super User group name (bypasses all filters)",
         "force_reload": true,
         "id": "aw-super-user-group"
-      },
-      {
-        "type": "heading",
-        "content": "Rule 1"
-      },
-      {
-        "type": "text",
-        "label": "Group Name",
-        "force_reload": true,
-        "id": "aw-filter-rule-1-group-name"
-      },
-      {
-        "type": "text",
-        "label": "Allowed SKU Prefixes (comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-1-sku-prefixes"
-      },
-      {
-        "type": "text",
-        "label": "SKU Whitelist (contains match, comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-1-sku-whitelist"
-      },
-      {
-        "type": "heading",
-        "content": "Rule 2"
-      },
-      {
-        "type": "text",
-        "label": "Group Name",
-        "force_reload": true,
-        "id": "aw-filter-rule-2-group-name"
-      },
-      {
-        "type": "text",
-        "label": "Allowed SKU Prefixes (comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-2-sku-prefixes"
-      },
-      {
-        "type": "text",
-        "label": "SKU Whitelist (contains match, comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-2-sku-whitelist"
-      },
-      {
-        "type": "heading",
-        "content": "Rule 3"
-      },
-      {
-        "type": "text",
-        "label": "Group Name",
-        "force_reload": true,
-        "id": "aw-filter-rule-3-group-name"
-      },
-      {
-        "type": "text",
-        "label": "Allowed SKU Prefixes (comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-3-sku-prefixes"
-      },
-      {
-        "type": "text",
-        "label": "SKU Whitelist (contains match, comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-3-sku-whitelist"
-      },
-      {
-        "type": "heading",
-        "content": "Rule 4"
-      },
-      {
-        "type": "text",
-        "label": "Group Name",
-        "force_reload": true,
-        "id": "aw-filter-rule-4-group-name"
-      },
-      {
-        "type": "text",
-        "label": "Allowed SKU Prefixes (comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-4-sku-prefixes"
-      },
-      {
-        "type": "text",
-        "label": "SKU Whitelist (contains match, comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-4-sku-whitelist"
-      },
-      {
-        "type": "heading",
-        "content": "Rule 5"
-      },
-      {
-        "type": "text",
-        "label": "Group Name",
-        "force_reload": true,
-        "id": "aw-filter-rule-5-group-name"
-      },
-      {
-        "type": "text",
-        "label": "Allowed SKU Prefixes (comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-5-sku-prefixes"
-      },
-      {
-        "type": "text",
-        "label": "SKU Whitelist (contains match, comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-5-sku-whitelist"
-      },
-      {
-        "type": "heading",
-        "content": "Rule 6"
-      },
-      {
-        "type": "text",
-        "label": "Group Name",
-        "force_reload": true,
-        "id": "aw-filter-rule-6-group-name"
-      },
-      {
-        "type": "text",
-        "label": "Allowed SKU Prefixes (comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-6-sku-prefixes"
-      },
-      {
-        "type": "text",
-        "label": "SKU Whitelist (contains match, comma-separated)",
-        "force_reload": true,
-        "id": "aw-filter-rule-6-sku-whitelist"
       }
     ]
   }

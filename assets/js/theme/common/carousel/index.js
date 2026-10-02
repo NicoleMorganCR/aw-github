@@ -48,44 +48,48 @@ export const onSlickCarouselChange = (e, carouselObj, context) => {
     $slider.data('state', null);
 };
 
+export const initCarousel = ($carousel, context) => {
+    $carousel.on('init breakpoint swipe', setCarouselState);
+    $carousel.on('click', '.slick-arrow, .slick-dots', setCarouselState);
+
+    $carousel.on('init breakpoint', (e, carouselObj) => activatePlayPauseButton(e, carouselObj, context));
+    $carousel.on('init afterChange', (e, carouselObj) => onSlickCarouselChange(e, carouselObj, context));
+    $carousel.on('click', '.slick-arrow, .slick-dots', $carousel, e => onUserCarouselChange(e, context));
+    $carousel.on('swipe', (e, carouselObj) => onUserCarouselChange(e, context, carouselObj.$slider));
+
+    if ($carousel.hasClass('heroCarousel')) {
+        $carousel.on('init afterChange', handleImageLoad);
+        $carousel.on('swipe', handleImageAspectRatio);
+        $carousel.on('click', '.slick-arrow, .slick-dots', handleImageAspectRatio);
+
+        // Alternative image styling for IE, which doesn't support objectfit
+        if (typeof document.documentElement.style.objectFit === 'undefined') {
+            $carousel.find('.heroCarousel-slide').each((index, slide) => {
+                $(slide).addClass('compat-object-fit');
+            });
+        }
+    }
+
+    const isMultipleSlides = $carousel.children().length > 1;
+    const customPaging = isMultipleSlides
+        ? () => (
+            '<button data-carousel-dot type="button"></button>'
+        )
+        : () => {};
+
+    $carousel.slick({
+        accessibility: false,
+        arrows: isMultipleSlides,
+        customPaging,
+        dots: isMultipleSlides,
+    });
+};
+
 export default function (context) {
     $('[data-slick]').each((idx, carousel) => {
         // getting element using find to pass jest test
         const $carousel = $(document).find(carousel);
 
-        $carousel.on('init breakpoint swipe', setCarouselState);
-        $carousel.on('click', '.slick-arrow, .slick-dots', setCarouselState);
-
-        $carousel.on('init breakpoint', (e, carouselObj) => activatePlayPauseButton(e, carouselObj, context));
-        $carousel.on('init afterChange', (e, carouselObj) => onSlickCarouselChange(e, carouselObj, context));
-        $carousel.on('click', '.slick-arrow, .slick-dots', $carousel, e => onUserCarouselChange(e, context));
-        $carousel.on('swipe', (e, carouselObj) => onUserCarouselChange(e, context, carouselObj.$slider));
-
-        if ($carousel.hasClass('heroCarousel')) {
-            $carousel.on('init afterChange', handleImageLoad);
-            $carousel.on('swipe', handleImageAspectRatio);
-            $carousel.on('click', '.slick-arrow, .slick-dots', handleImageAspectRatio);
-
-            // Alternative image styling for IE, which doesn't support objectfit
-            if (typeof document.documentElement.style.objectFit === 'undefined') {
-                $carousel.find('.heroCarousel-slide').each((index, slide) => {
-                    $(slide).addClass('compat-object-fit');
-                });
-            }
-        }
-
-        const isMultipleSlides = $carousel.children().length > 1;
-        const customPaging = isMultipleSlides
-            ? () => (
-                '<button data-carousel-dot type="button"></button>'
-            )
-            : () => {};
-
-        $carousel.slick({
-            accessibility: false,
-            arrows: isMultipleSlides,
-            customPaging,
-            dots: isMultipleSlides,
-        });
+        initCarousel($carousel, context);
     });
 }
